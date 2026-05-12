@@ -1,7 +1,6 @@
 # Playwright Java Test Framework
 
-<!-- After pushing to GitHub, replace OWNER/REPO with your actual repo path -->
-![Tests](https://github.com/OWNER/REPO/actions/workflows/test.yml/badge.svg)
+![Tests](https://github.com/Moe511/playwright-java-framework/actions/workflows/test.yml/badge.svg)
 
 A UI + API test automation framework using **Playwright for Java**, **JUnit 5**, and **Allure**.
 
@@ -146,7 +145,6 @@ GitHub Actions workflow lives at `.github/workflows/test.yml`. Every push or PR 
 - Uploads four artifacts: `allure-results`, `surefire-reports`, plus `playwright-traces` and `playwright-videos` on failure
 - Publishes a second job that builds the Allure HTML report and uploads it as `allure-report` — download and open `index.html` locally
 
-To get the build badge working, replace `OWNER/REPO` at the top of this README with your actual GitHub path after pushing.
 
 ## Roadmap
 
