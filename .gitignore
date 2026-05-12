@@ -1,0 +1,30 @@
+# Maven
+target/
+.mvn/
+mvnw
+mvnw.cmd
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Playwright
+playwright-report/
+test-results/
+.playwright/
+
+# Allure
+allure-results/
+allure-report/
+.allure/
+
+# Logs
+*.log
