@@ -22,10 +22,6 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# ── Build mvn arguments ───────────────────────────────────────────────────────
-MVN_ARGS=("-B" "test")
-[[ "$SUITE" != "all" ]] && MVN_ARGS+=("-P$SUITE")
-
 SUITE_LABEL=$(echo "$SUITE" | tr '[:lower:]' '[:upper:]')
 
 # ── Run tests ─────────────────────────────────────────────────────────────────
@@ -36,8 +32,21 @@ echo "================================================="
 echo ""
 
 set +e
-mvn "${MVN_ARGS[@]}" "${EXTRA[@]}"
-EXIT=$?
+if [[ "$SUITE" == "all" ]]; then
+    echo "── JUnit tests ──────────────────────────────────"
+    mvn -B test "${EXTRA[@]}"
+    JUNIT_EXIT=$?
+
+    echo ""
+    echo "── BDD scenarios ────────────────────────────────"
+    mvn -B test -Pbdd "${EXTRA[@]}"
+    BDD_EXIT=$?
+
+    [[ $JUNIT_EXIT -ne 0 || $BDD_EXIT -ne 0 ]] && EXIT=1 || EXIT=0
+else
+    mvn -B test "-P$SUITE" "${EXTRA[@]}"
+    EXIT=$?
+fi
 set -e
 
 # ── Result banner ─────────────────────────────────────────────────────────────

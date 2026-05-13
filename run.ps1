@@ -25,11 +25,10 @@ param(
     [string]$Browser = ""
 )
 
-# ── Build mvn arguments ───────────────────────────────────────────────────────
-$mvnArgs = @("-B", "test")
-if ($Suite -ne "all") { $mvnArgs += "-P$Suite" }
-if ($Headed)          { $mvnArgs += "-Dheadless=false" }
-if ($Browser)         { $mvnArgs += "-Dbrowser=$Browser" }
+# ── Shared extra flags ────────────────────────────────────────────────────────
+$extraArgs = @()
+if ($Headed)  { $extraArgs += "-Dheadless=false" }
+if ($Browser) { $extraArgs += "-Dbrowser=$Browser" }
 
 # ── Run tests ─────────────────────────────────────────────────────────────────
 Write-Host ""
@@ -38,8 +37,21 @@ Write-Host "  Suite : $($Suite.ToUpper())" -ForegroundColor Cyan
 Write-Host "=================================================" -ForegroundColor Cyan
 Write-Host ""
 
-& mvn @mvnArgs
-$exitCode = $LASTEXITCODE
+if ($Suite -eq "all") {
+    Write-Host "── JUnit tests ──────────────────────────────────" -ForegroundColor DarkCyan
+    & mvn -B test @extraArgs
+    $junitExit = $LASTEXITCODE
+
+    Write-Host ""
+    Write-Host "── BDD scenarios ────────────────────────────────" -ForegroundColor DarkCyan
+    & mvn -B test -Pbdd @extraArgs
+    $bddExit = $LASTEXITCODE
+
+    $exitCode = if ($junitExit -ne 0 -or $bddExit -ne 0) { 1 } else { 0 }
+} else {
+    & mvn -B test "-P$Suite" @extraArgs
+    $exitCode = $LASTEXITCODE
+}
 
 # ── Result banner ─────────────────────────────────────────────────────────────
 Write-Host ""
