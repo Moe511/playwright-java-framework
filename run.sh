@@ -3,24 +3,56 @@
 #
 # Usage:
 #   ./run.sh [all|ui|api|bdd] [--headed] [--browser chromium|firefox|webkit]
+#                             [--tag <tag>] [--feature <name>]
 #
 # Examples:
 #   ./run.sh
 #   ./run.sh bdd
 #   ./run.sh ui --headed
-#   ./run.sh api --browser firefox
+#   ./run.sh --tag smoke
+#   ./run.sh --tag blocker
+#   ./run.sh --feature login
+#   ./run.sh --feature booking --tag critical
 
 SUITE="${1:-all}"
 shift || true
 EXTRA=()
+TAG=""
+FEATURE=""
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --headed)  EXTRA+=("-Dheadless=false"); shift ;;
         --browser) EXTRA+=("-Dbrowser=$2");     shift 2 ;;
+        --tag)     TAG="$2";                    shift 2 ;;
+        --feature) FEATURE="$2";                shift 2 ;;
         *)         shift ;;
     esac
 done
+
+# ── Tag / Feature imply BDD suite ─────────────────────────────────────────────
+[[ -n "$TAG" || -n "$FEATURE" ]] && SUITE="bdd"
+
+if [[ -n "$TAG" ]]; then
+    [[ "$TAG" == *@* ]] || TAG="@$TAG"
+    EXTRA+=("-Dcucumber.filter.tags=$TAG")
+fi
+
+if [[ -n "$FEATURE" ]]; then
+    FOUND=$(find src/test/resources/features -name "*${FEATURE}*.feature" 2>/dev/null)
+    COUNT=$(echo "$FOUND" | grep -c ".feature" 2>/dev/null || echo 0)
+    if [[ $COUNT -eq 0 ]]; then
+        echo "No feature file matching '$FEATURE' found."
+        exit 1
+    fi
+    if [[ $COUNT -gt 1 ]]; then
+        echo "Multiple matches for '$FEATURE' — be more specific:"
+        echo "$FOUND"
+        exit 1
+    fi
+    REL=$(echo "$FOUND" | sed 's|src/test/resources/||')
+    EXTRA+=("-Dcucumber.features=classpath:$REL")
+fi
 
 SUITE_LABEL=$(echo "$SUITE" | tr '[:lower:]' '[:upper:]')
 
