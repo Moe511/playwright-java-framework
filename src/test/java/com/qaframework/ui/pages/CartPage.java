@@ -25,6 +25,13 @@ public class CartPage extends BasePage {
         return items.locator(".inventory_item_name").allInnerTexts();
     }
 
+    @Step("Remove '{productName}' from cart")
+    public CartPage removeItem(String productName) {
+        items.filter(new Locator.FilterOptions().setHasText(productName))
+             .locator("button").click();
+        return this;
+    }
+
     @Step("Proceed to checkout")
     public CheckoutPage checkout() {
         checkoutButton.click();

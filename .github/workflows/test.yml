@@ -34,8 +34,11 @@ jobs:
       - name: Install Playwright browsers + OS deps
         run: mvn -B exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install --with-deps"
 
-      - name: Run tests
+      - name: Run JUnit tests
         run: mvn -B test
+
+      - name: Run BDD scenarios
+        run: mvn -B test -Pbdd
 
       - name: Upload Allure results
         if: always()
