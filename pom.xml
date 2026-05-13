@@ -97,11 +97,18 @@
         </dependency>
 
         <!-- Allure Cucumber 7 integration -->
+        <!-- Exclude gherkin to avoid messages version conflict with cucumber-java 7.18.1 -->
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-cucumber7-jvm</artifactId>
             <version>${allure.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.cucumber</groupId>
+                    <artifactId>gherkin</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
