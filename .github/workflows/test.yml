@@ -38,6 +38,7 @@ jobs:
         run: mvn -B test
 
       - name: Run BDD scenarios
+        if: always()
         run: mvn -B test -Pbdd
 
       - name: Upload Allure results
@@ -56,14 +57,6 @@ jobs:
           path: target/traces
           retention-days: 14
 
-      - name: Upload videos on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-videos
-          path: target/videos
-          retention-days: 14
-
       - name: Upload Surefire reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -73,12 +66,13 @@ jobs:
           retention-days: 14
 
   publish-allure-report:
-    name: Publish Allure HTML report
+    name: Publish Allure report to GitHub Pages
     runs-on: ubuntu-latest
     needs: test
     if: always()
     permissions:
-      contents: read
+      contents: write
+
     steps:
       - name: Download Allure results
         uses: actions/download-artifact@v4
@@ -86,21 +80,29 @@ jobs:
           name: allure-results
           path: allure-results
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - name: Load Allure history from GitHub Pages
+        uses: actions/checkout@v4
+        continue-on-error: true
         with:
-          distribution: temurin
-          java-version: '17'
+          ref: gh-pages
+          path: gh-pages
 
       - name: Generate Allure HTML report
         run: |
           curl -sLo allure.tgz https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
           tar -xzf allure.tgz
+          mkdir -p allure-results/history
+          cp -r gh-pages/history/. allure-results/history/ 2>/dev/null || true
           ./allure-2.27.0/bin/allure generate allure-results --clean -o allure-report
 
-      - name: Upload Allure HTML report
-        uses: actions/upload-artifact@v4
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          name: allure-report
-          path: allure-report
-          retention-days: 14
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-report
+
+      - name: Write report link to job summary
+        run: |
+          echo "## Allure Report" >> $GITHUB_STEP_SUMMARY
+          echo "[View full report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/)" >> $GITHUB_STEP_SUMMARY
