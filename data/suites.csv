@@ -1,0 +1,97 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"passed","Thu May 14 21:24:56 UTC 2026","Thu May 14 21:25:01 UTC 2026","4830","","com.qaframework.ui.tests.CheckoutTest","","com.qaframework.ui.tests.CheckoutTest","endToEndCheckoutSucceeds","User can complete a checkout end-to-end",""
+"passed","Thu May 14 21:25:13 UTC 2026","Thu May 14 21:25:13 UTC 2026","367","","Booking CRUD","","Creating bookings with different guest data","","Creating bookings with different guest data","  As a restful-booker API consumer
+  I want to manage hotel bookings
+  So that I can create, read, update, and delete reservations"
+"passed","Thu May 14 21:24:59 UTC 2026","Thu May 14 21:25:00 UTC 2026","1082","","com.qaframework.api.tests.BookingCrudTest","","com.qaframework.api.tests.BookingCrudTest","canReadCreatedBooking","GET /booking/{id} returns the booking we just created",""
+"passed","Thu May 14 21:25:25 UTC 2026","Thu May 14 21:25:26 UTC 2026","862","","Authentication","","Standard user logs in successfully","","Standard user logs in successfully","  As a Saucedemo user
+  I want to log in to the application
+  So that I can access the product inventory"
+"passed","Thu May 14 21:25:14 UTC 2026","Thu May 14 21:25:16 UTC 2026","1145","","Shopping Cart","","Multiple items appear in the cart","","Multiple items appear in the cart","  As a logged-in Saucedemo user
+  I want to add products to my cart
+  So that I can review them before purchasing"
+"passed","Thu May 14 21:25:32 UTC 2026","Thu May 14 21:25:33 UTC 2026","1961","","Session Management","","Logged-out user cannot access the inventory page directly","","Logged-out user cannot access the inventory page directly","  As a Saucedemo user
+  I want to log out of the application
+  So that my session is terminated and the login page is shown"
+"passed","Thu May 14 21:25:16 UTC 2026","Thu May 14 21:25:17 UTC 2026","1212","","Checkout","","Successful end-to-end checkout","","Successful end-to-end checkout","  As a logged-in Saucedemo user with items in my cart
+  I want to complete a purchase
+  So that my order is confirmed"
+"passed","Thu May 14 21:25:01 UTC 2026","Thu May 14 21:25:03 UTC 2026","2289","","com.qaframework.ui.tests.CartTest","","com.qaframework.ui.tests.CartTest","addingItemUpdatesBadge","Adding one item updates the cart badge to 1",""
+"passed","Thu May 14 21:25:20 UTC 2026","Thu May 14 21:25:21 UTC 2026","922","","Inventory Management","","Sorting products updates the displayed order","","Sorting products updates the displayed order","  As a logged-in Saucedemo user
+  I want to manage items and sort the product list
+  So that I can find and control what is in my cart"
+"passed","Thu May 14 21:25:29 UTC 2026","Thu May 14 21:25:30 UTC 2026","808","","Authentication","","Invalid login attempts show the correct error","","Invalid login attempts show the correct error","  As a Saucedemo user
+  I want to log in to the application
+  So that I can access the product inventory"
+"passed","Thu May 14 21:24:56 UTC 2026","Thu May 14 21:24:58 UTC 2026","2507","","com.qaframework.api.tests.BookingCrudTest","","com.qaframework.api.tests.BookingCrudTest","canDeleteBooking","DELETE /booking/{id} removes the booking",""
+"passed","Thu May 14 21:25:27 UTC 2026","Thu May 14 21:25:28 UTC 2026","800","","Authentication","","Invalid login attempts show the correct error","","Invalid login attempts show the correct error","  As a Saucedemo user
+  I want to log in to the application
+  So that I can access the product inventory"
+"passed","Thu May 14 21:25:08 UTC 2026","Thu May 14 21:25:10 UTC 2026","1902","","API Authentication","","Valid credentials return an auth token","","Valid credentials return an auth token","  As a restful-booker API consumer
+  I want to authenticate with valid credentials
+  So that I can use protected endpoints"
+"passed","Thu May 14 21:25:21 UTC 2026","Thu May 14 21:25:22 UTC 2026","899","","Inventory Management","","Sorting products updates the displayed order","","Sorting products updates the displayed order","  As a logged-in Saucedemo user
+  I want to manage items and sort the product list
+  So that I can find and control what is in my cart"
+"passed","Thu May 14 21:25:00 UTC 2026","Thu May 14 21:25:01 UTC 2026","961","","com.qaframework.api.tests.BookingCrudTest","","com.qaframework.api.tests.BookingCrudTest","createBookingReturnsId","POST /booking returns a booking ID and echoes the payload",""
+"passed","Thu May 14 21:25:02 UTC 2026","Thu May 14 21:25:02 UTC 2026","855","","com.qaframework.api.tests.AuthTest","","com.qaframework.api.tests.AuthTest","validCredentialsReturnToken","Valid credentials return a non-empty auth token",""
+"passed","Thu May 14 21:25:11 UTC 2026","Thu May 14 21:25:11 UTC 2026","497","","Booking CRUD","","Read a created booking","","Read a created booking","  As a restful-booker API consumer
+  I want to manage hotel bookings
+  So that I can create, read, update, and delete reservations"
+"passed","Thu May 14 21:25:28 UTC 2026","Thu May 14 21:25:29 UTC 2026","821","","Authentication","","Invalid login attempts show the correct error","","Invalid login attempts show the correct error","  As a Saucedemo user
+  I want to log in to the application
+  So that I can access the product inventory"
+"passed","Thu May 14 21:25:11 UTC 2026","Thu May 14 21:25:12 UTC 2026","432","","Booking CRUD","","Delete a booking removes it","","Delete a booking removes it","  As a restful-booker API consumer
+  I want to manage hotel bookings
+  So that I can create, read, update, and delete reservations"
+"passed","Thu May 14 21:25:01 UTC 2026","Thu May 14 21:25:02 UTC 2026","826","","com.qaframework.api.tests.BookingCrudTest","","com.qaframework.api.tests.BookingCrudTest","canUpdateBookingWithToken","PUT /booking/{id} with a valid token updates fields",""
+"passed","Thu May 14 21:25:12 UTC 2026","Thu May 14 21:25:13 UTC 2026","350","","Booking CRUD","","Creating bookings with different guest data","","Creating bookings with different guest data","  As a restful-booker API consumer
+  I want to manage hotel bookings
+  So that I can create, read, update, and delete reservations"
+"passed","Thu May 14 21:25:00 UTC 2026","Thu May 14 21:25:02 UTC 2026","2432","","com.qaframework.ui.tests.LoginTest","","com.qaframework.ui.tests.LoginTest","standardUserCanLogIn","Standard user can log in and lands on the inventory page",""
+"passed","Thu May 14 21:25:22 UTC 2026","Thu May 14 21:25:23 UTC 2026","936","","Inventory Management","","Sorting products updates the displayed order","","Sorting products updates the displayed order","  As a logged-in Saucedemo user
+  I want to manage items and sort the product list
+  So that I can find and control what is in my cart"
+"passed","Thu May 14 21:25:18 UTC 2026","Thu May 14 21:25:19 UTC 2026","991","","Inventory Management","","Remove an item from the inventory page","","Remove an item from the inventory page","  As a logged-in Saucedemo user
+  I want to manage items and sort the product list
+  So that I can find and control what is in my cart"
+"passed","Thu May 14 21:25:02 UTC 2026","Thu May 14 21:25:04 UTC 2026","1253","","com.qaframework.ui.tests.LoginTest","","com.qaframework.ui.tests.LoginTest","lockedOutUserCannotLogIn","Locked-out user sees the expected error message",""
+"passed","Thu May 14 21:25:13 UTC 2026","Thu May 14 21:25:13 UTC 2026","372","","Booking CRUD","","Creating bookings with different guest data","","Creating bookings with different guest data","  As a restful-booker API consumer
+  I want to manage hotel bookings
+  So that I can create, read, update, and delete reservations"
+"passed","Thu May 14 21:25:23 UTC 2026","Thu May 14 21:25:24 UTC 2026","901","","Inventory Management","","Sorting products updates the displayed order","","Sorting products updates the displayed order","  As a logged-in Saucedemo user
+  I want to manage items and sort the product list
+  So that I can find and control what is in my cart"
+"passed","Thu May 14 21:24:56 UTC 2026","Thu May 14 21:25:00 UTC 2026","3972","","com.qaframework.ui.tests.LoginTest","","com.qaframework.ui.tests.LoginTest","invalidCredentialsRejected","Invalid credentials produce an error and stay on the login page",""
+"passed","Thu May 14 21:25:26 UTC 2026","Thu May 14 21:25:27 UTC 2026","876","","Authentication","","Named user logs in with explicit credentials","","Named user logs in with explicit credentials","  As a Saucedemo user
+  I want to log in to the application
+  So that I can access the product inventory"
+"passed","Thu May 14 21:25:11 UTC 2026","Thu May 14 21:25:11 UTC 2026","396","","Booking CRUD","","Update a booking with a valid token","","Update a booking with a valid token","  As a restful-booker API consumer
+  I want to manage hotel bookings
+  So that I can create, read, update, and delete reservations"
+"passed","Thu May 14 21:24:56 UTC 2026","Thu May 14 21:25:01 UTC 2026","4624","","com.qaframework.ui.tests.CartTest","","com.qaframework.ui.tests.CartTest","multipleItemsAppearInCart","Adding multiple items shows all in the cart page",""
+"passed","Thu May 14 21:25:30 UTC 2026","Thu May 14 21:25:32 UTC 2026","1838","","Session Management","","User can log out from the inventory page","","User can log out from the inventory page","  As a Saucedemo user
+  I want to log out of the application
+  So that my session is terminated and the login page is shown"
+"passed","Thu May 14 21:25:12 UTC 2026","Thu May 14 21:25:12 UTC 2026","341","","Booking CRUD","","Create a booking with custom check-in and check-out dates","","Create a booking with custom check-in and check-out dates","  As a restful-booker API consumer
+  I want to manage hotel bookings
+  So that I can create, read, update, and delete reservations"
+"passed","Thu May 14 21:25:10 UTC 2026","Thu May 14 21:25:10 UTC 2026","513","","Booking CRUD","","Create a booking returns a booking ID","","Create a booking returns a booking ID","  As a restful-booker API consumer
+  I want to manage hotel bookings
+  So that I can create, read, update, and delete reservations"
+"passed","Thu May 14 21:25:17 UTC 2026","Thu May 14 21:25:18 UTC 2026","1115","","Checkout","","Missing postal code blocks checkout","","Missing postal code blocks checkout","  As a logged-in Saucedemo user with items in my cart
+  I want to complete a purchase
+  So that my order is confirmed"
+"passed","Thu May 14 21:25:24 UTC 2026","Thu May 14 21:25:25 UTC 2026","917","","Inventory Management","","Sort by name ascending produces alphabetical order","","Sort by name ascending produces alphabetical order","  As a logged-in Saucedemo user
+  I want to manage items and sort the product list
+  So that I can find and control what is in my cart"
+"passed","Thu May 14 21:25:13 UTC 2026","Thu May 14 21:25:14 UTC 2026","1108","","Shopping Cart","","Adding one item updates the cart badge","","Adding one item updates the cart badge","  As a logged-in Saucedemo user
+  I want to add products to my cart
+  So that I can review them before purchasing"
+"passed","Thu May 14 21:25:25 UTC 2026","Thu May 14 21:25:25 UTC 2026","926","","Inventory Management","","Sort by price ascending produces lowest-first order","","Sort by price ascending produces lowest-first order","  As a logged-in Saucedemo user
+  I want to manage items and sort the product list
+  So that I can find and control what is in my cart"
+"passed","Thu May 14 21:25:19 UTC 2026","Thu May 14 21:25:20 UTC 2026","1007","","Inventory Management","","Remove an item from the cart page","","Remove an item from the cart page","  As a logged-in Saucedemo user
+  I want to manage items and sort the product list
+  So that I can find and control what is in my cart"
+"passed","Thu May 14 21:25:01 UTC 2026","Thu May 14 21:25:03 UTC 2026","2425","","com.qaframework.ui.tests.CheckoutTest","","com.qaframework.ui.tests.CheckoutTest","missingPostalCodeBlocksCheckout","Missing postal code blocks checkout continuation",""
