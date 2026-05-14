@@ -6,7 +6,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CheckoutSteps {
 
@@ -44,13 +44,11 @@ public class CheckoutSteps {
 
     @Then("I should see the order confirmation")
     public void iShouldSeeOrderConfirmation() {
-        assertTrue(ctx.checkoutPage.isOrderComplete(),
-                "Order confirmation should be visible after completing checkout");
+        assertThat(ctx.checkoutPage.isOrderComplete()).as("Order confirmation should be visible after completing checkout").isTrue();
     }
 
     @Then("I should see a checkout error containing {string}")
     public void iShouldSeeCheckoutErrorContaining(String text) {
-        assertTrue(ctx.checkoutPage.errorMessage().toLowerCase().contains(text.toLowerCase()),
-                "Expected checkout error containing '" + text + "', got: " + ctx.checkoutPage.errorMessage());
+        assertThat(ctx.checkoutPage.errorMessage()).as("Expected checkout error containing '%s'", text).containsIgnoringCase(text);
     }
 }

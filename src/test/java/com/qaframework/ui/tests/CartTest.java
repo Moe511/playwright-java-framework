@@ -13,10 +13,7 @@ import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Epic("Saucedemo")
 @Feature("Shopping cart")
@@ -36,7 +33,9 @@ public class CartTest extends BaseTest {
         InventoryPage inventory = loginAndOpenInventory()
                 .addToCart("Sauce Labs Backpack");
 
-        assertEquals(1, inventory.cartCount(), "Cart badge should show 1");
+        assertThat(inventory.cartCount())
+                .as("Cart badge should show 1 after adding one item")
+                .isEqualTo(1);
     }
 
     @Test
@@ -50,11 +49,12 @@ public class CartTest extends BaseTest {
                 .addToCart("Sauce Labs Bolt T-Shirt")
                 .openCart();
 
-        assertEquals(3, cart.itemCount());
+        assertThat(cart.itemCount())
+                .as("Cart should contain 3 items")
+                .isEqualTo(3);
 
-        List<String> names = cart.itemNames();
-        assertTrue(names.contains("Sauce Labs Backpack"));
-        assertTrue(names.contains("Sauce Labs Bike Light"));
-        assertTrue(names.contains("Sauce Labs Bolt T-Shirt"));
+        assertThat(cart.itemNames())
+                .as("Cart should contain all three added products")
+                .contains("Sauce Labs Backpack", "Sauce Labs Bike Light", "Sauce Labs Bolt T-Shirt");
     }
 }

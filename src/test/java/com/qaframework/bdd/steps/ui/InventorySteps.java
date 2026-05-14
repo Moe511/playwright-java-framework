@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class InventorySteps {
 
@@ -25,8 +25,7 @@ public class InventorySteps {
 
     @Then("the first product name should be {string}")
     public void theFirstProductNameShouldBe(String name) {
-        assertEquals(name, ctx.inventoryPage.firstProductName(),
-                "First product name mismatch after sorting");
+        assertThat(ctx.inventoryPage.firstProductName()).as("First product name mismatch after sorting").isEqualTo(name);
     }
 
     @Then("product names should be in ascending order")
@@ -34,7 +33,7 @@ public class InventorySteps {
         List<String> actual = ctx.inventoryPage.allProductNames();
         List<String> expected = new ArrayList<>(actual);
         Collections.sort(expected);
-        assertEquals(expected, actual, "Product names should be sorted A to Z");
+        assertThat(actual).as("Product names should be sorted A to Z").isEqualTo(expected);
     }
 
     @Then("product names should be in descending order")
@@ -42,7 +41,7 @@ public class InventorySteps {
         List<String> actual = ctx.inventoryPage.allProductNames();
         List<String> expected = new ArrayList<>(actual);
         expected.sort(Collections.reverseOrder());
-        assertEquals(expected, actual, "Product names should be sorted Z to A");
+        assertThat(actual).as("Product names should be sorted Z to A").isEqualTo(expected);
     }
 
     @Then("product prices should be in ascending order")
@@ -50,7 +49,7 @@ public class InventorySteps {
         List<Double> actual = ctx.inventoryPage.allProductPrices();
         List<Double> expected = new ArrayList<>(actual);
         Collections.sort(expected);
-        assertEquals(expected, actual, "Product prices should be sorted low to high");
+        assertThat(actual).as("Product prices should be sorted low to high").isEqualTo(expected);
     }
 
     @Then("product prices should be in descending order")
@@ -58,6 +57,6 @@ public class InventorySteps {
         List<Double> actual = ctx.inventoryPage.allProductPrices();
         List<Double> expected = new ArrayList<>(actual);
         expected.sort(Collections.reverseOrder());
-        assertEquals(expected, actual, "Product prices should be sorted high to low");
+        assertThat(actual).as("Product prices should be sorted high to low").isEqualTo(expected);
     }
 }

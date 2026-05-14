@@ -5,8 +5,7 @@ import com.qaframework.bdd.context.APIContext;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AuthSteps {
 
@@ -23,8 +22,7 @@ public class AuthSteps {
 
     @Then("I should receive a non-empty auth token")
     public void iShouldReceiveNonEmptyToken() {
-        assertNotNull(ctx.authToken, "Token should not be null");
-        assertTrue(ctx.authToken.length() > 10,
-                "Token should look like a real token, got: " + ctx.authToken);
+        assertThat(ctx.authToken).as("Token should not be null").isNotNull();
+        assertThat(ctx.authToken).as("Token should look like a real token").hasSizeGreaterThan(10);
     }
 }

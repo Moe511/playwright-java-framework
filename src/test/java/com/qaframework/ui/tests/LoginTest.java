@@ -12,8 +12,7 @@ import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Epic("Saucedemo")
 @Feature("Authentication")
@@ -29,8 +28,12 @@ public class LoginTest extends BaseTest {
                 ConfigReader.get("saucedemo.username"),
                 ConfigReader.get("saucedemo.password"));
 
-        assertTrue(inventory.isLoaded(), "Inventory page should load after login");
-        assertEquals(6, inventory.itemCount(), "Saucedemo inventory should show 6 items");
+        assertThat(inventory.isLoaded())
+                .as("Inventory page should load after login")
+                .isTrue();
+        assertThat(inventory.itemCount())
+                .as("Saucedemo inventory should show 6 products")
+                .isEqualTo(6);
     }
 
     @Test
@@ -41,8 +44,9 @@ public class LoginTest extends BaseTest {
         LoginPage login = new LoginPage(page()).open();
         login.attemptLogin("locked_out_user", ConfigReader.get("saucedemo.password"));
 
-        assertTrue(login.errorMessage().toLowerCase().contains("locked out"),
-                "Expected lockout error, got: " + login.errorMessage());
+        assertThat(login.errorMessage())
+                .as("Expected lockout error message")
+                .containsIgnoringCase("locked out");
     }
 
     @Test
@@ -53,7 +57,8 @@ public class LoginTest extends BaseTest {
         LoginPage login = new LoginPage(page()).open();
         login.attemptLogin("not_a_real_user", "wrong");
 
-        assertTrue(login.errorMessage().toLowerCase().contains("do not match"),
-                "Expected credentials error, got: " + login.errorMessage());
+        assertThat(login.errorMessage())
+                .as("Expected credentials mismatch error message")
+                .containsIgnoringCase("do not match");
     }
 }

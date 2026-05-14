@@ -12,9 +12,7 @@ import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Epic("restful-booker")
 @Feature("Booking CRUD")
@@ -28,9 +26,9 @@ public class BookingCrudTest extends BaseApiTest {
         BookingClient client = new BookingClient(api);
         CreatedBooking created = client.create(Booking.sample());
 
-        assertNotNull(created.getBookingid(), "bookingid should be present");
-        assertTrue(created.getBookingid() > 0, "bookingid should be positive");
-        assertEquals("Mohamed", created.getBooking().getFirstname());
+        assertThat(created.getBookingid()).as("bookingid should be present").isNotNull();
+        assertThat(created.getBookingid()).as("bookingid should be positive").isPositive();
+        assertThat(created.getBooking().getFirstname()).isEqualTo("Mohamed");
     }
 
     @Test
@@ -42,9 +40,9 @@ public class BookingCrudTest extends BaseApiTest {
         int id = client.create(Booking.sample()).getBookingid();
 
         Booking fetched = client.get(id);
-        assertEquals("Mohamed", fetched.getFirstname());
-        assertEquals("Ahmed", fetched.getLastname());
-        assertEquals(250, fetched.getTotalprice());
+        assertThat(fetched.getFirstname()).isEqualTo("Mohamed");
+        assertThat(fetched.getLastname()).isEqualTo("Ahmed");
+        assertThat(fetched.getTotalprice()).isEqualTo(250);
     }
 
     @Test
@@ -62,8 +60,8 @@ public class BookingCrudTest extends BaseApiTest {
         updated.setBookingdates(new BookingDates("2026-07-10", "2026-07-12"));
 
         Booking response = client.update(id, updated, token);
-        assertEquals("Updated", response.getLastname());
-        assertEquals(999, response.getTotalprice());
+        assertThat(response.getLastname()).isEqualTo("Updated");
+        assertThat(response.getTotalprice()).isEqualTo(999);
     }
 
     @Test
@@ -77,10 +75,9 @@ public class BookingCrudTest extends BaseApiTest {
 
         int deleteStatus = client.delete(id, token);
         // restful-booker quirk: returns 201 on successful delete
-        assertTrue(deleteStatus == 201 || deleteStatus == 200,
-                "Expected 200/201 on delete, got " + deleteStatus);
+        assertThat(deleteStatus).as("Expected 200/201 on delete").isIn(200, 201);
 
         int getStatus = client.statusOf(id);
-        assertEquals(404, getStatus, "GET on deleted booking should be 404");
+        assertThat(getStatus).as("GET on deleted booking should be 404").isEqualTo(404);
     }
 }

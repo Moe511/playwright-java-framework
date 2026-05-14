@@ -7,8 +7,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoginSteps {
 
@@ -37,13 +36,12 @@ public class LoginSteps {
 
     @Then("the inventory page should load")
     public void theInventoryPageShouldLoad() {
-        assertTrue(ctx.inventoryPage.isLoaded(), "Inventory page should be visible after login");
+        assertThat(ctx.inventoryPage.isLoaded()).as("Inventory page should be visible after login").isTrue();
     }
 
     @Then("the inventory should show {int} products")
     public void theInventoryShouldShowProducts(int count) {
-        assertEquals(count, ctx.inventoryPage.itemCount(),
-                "Inventory product count mismatch");
+        assertThat(ctx.inventoryPage.itemCount()).as("Inventory product count mismatch").isEqualTo(count);
     }
 
     @When("I attempt to log in with username {string} and the standard password")
@@ -58,8 +56,7 @@ public class LoginSteps {
 
     @Then("I should see an error containing {string}")
     public void iShouldSeeErrorContaining(String text) {
-        assertTrue(ctx.loginPage.errorMessage().toLowerCase().contains(text.toLowerCase()),
-                "Expected error containing '" + text + "', got: " + ctx.loginPage.errorMessage());
+        assertThat(ctx.loginPage.errorMessage()).as("Expected error containing '%s'", text).containsIgnoringCase(text);
     }
 
     @When("I log out")
@@ -69,9 +66,7 @@ public class LoginSteps {
 
     @Then("I should be on the login page")
     public void iShouldBeOnTheLoginPage() {
-        assertTrue(ctx.getPage().url().contains("saucedemo.com"),
-                "Expected to be on the login page, but URL was: " + ctx.getPage().url());
-        assertTrue(ctx.getPage().locator("#login-button").isVisible(),
-                "Login button should be visible on the login page");
+        assertThat(ctx.getPage().url()).as("Expected to be on the login page").contains("saucedemo.com");
+        assertThat(ctx.getPage().locator("#login-button").isVisible()).as("Login button should be visible on the login page").isTrue();
     }
 }

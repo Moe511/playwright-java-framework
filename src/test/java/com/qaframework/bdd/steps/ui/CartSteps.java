@@ -11,8 +11,7 @@ import io.cucumber.java.en.When;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CartSteps {
 
@@ -36,8 +35,7 @@ public class CartSteps {
 
     @Then("the cart badge should show {int}")
     public void theCartBadgeShouldShow(int count) {
-        assertEquals(count, ctx.inventoryPage.cartCount(),
-                "Cart badge count mismatch");
+        assertThat(ctx.inventoryPage.cartCount()).as("Cart badge count mismatch").isEqualTo(count);
     }
 
     @When("I add the following items to the cart:")
@@ -55,14 +53,12 @@ public class CartSteps {
 
     @Then("the cart should contain {int} items")
     public void theCartShouldContainItems(int count) {
-        assertEquals(count, ctx.cartPage.itemCount(),
-                "Cart item count mismatch");
+        assertThat(ctx.cartPage.itemCount()).as("Cart item count mismatch").isEqualTo(count);
     }
 
     @Then("the cart should include {string}")
     public void theCartShouldInclude(String productName) {
-        assertTrue(ctx.cartPage.itemNames().contains(productName),
-                "Cart should contain '" + productName + "' but had: " + ctx.cartPage.itemNames());
+        assertThat(ctx.cartPage.itemNames()).as("Cart should contain '%s'", productName).contains(productName);
     }
 
     @When("I remove {string} from the inventory")

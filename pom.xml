@@ -60,6 +60,14 @@
             <version>${jackson.version}</version>
         </dependency>
 
+        <!-- AssertJ for fluent, descriptive assertions -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.25.3</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- SLF4J simple binding so Playwright logs render cleanly -->
         <dependency>
             <groupId>org.slf4j</groupId>

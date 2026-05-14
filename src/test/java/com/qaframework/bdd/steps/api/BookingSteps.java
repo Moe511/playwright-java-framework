@@ -10,8 +10,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BookingSteps {
 
@@ -60,8 +59,7 @@ public class BookingSteps {
 
     @Then("the response should include a positive booking ID")
     public void theResponseShouldIncludePositiveId() {
-        assertTrue(ctx.lastBookingId > 0,
-                "Booking ID should be positive, got: " + ctx.lastBookingId);
+        assertThat(ctx.lastBookingId).as("Booking ID should be positive").isPositive();
     }
 
     @When("I retrieve the booking by its ID")
@@ -71,17 +69,17 @@ public class BookingSteps {
 
     @Then("the booking firstname should be {string}")
     public void theBookingFirstnameShouldBe(String name) {
-        assertEquals(name, lastFetched.getFirstname());
+        assertThat(lastFetched.getFirstname()).isEqualTo(name);
     }
 
     @Then("the booking lastname should be {string}")
     public void theBookingLastnameShouldBe(String name) {
-        assertEquals(name, lastFetched.getLastname());
+        assertThat(lastFetched.getLastname()).isEqualTo(name);
     }
 
     @Then("the booking total price should be {int}")
     public void theBookingTotalPriceShouldBe(int price) {
-        assertEquals(price, lastFetched.getTotalprice());
+        assertThat(lastFetched.getTotalprice()).isEqualTo(price);
     }
 
     @When("I update the booking lastname to {string} and total price to {int}")
@@ -100,14 +98,12 @@ public class BookingSteps {
 
     @Then("the delete response should be 200 or 201")
     public void theDeleteResponseShouldBe200Or201() {
-        assertTrue(ctx.lastDeleteStatus == 200 || ctx.lastDeleteStatus == 201,
-                "Expected 200 or 201 on delete, got: " + ctx.lastDeleteStatus);
+        assertThat(ctx.lastDeleteStatus).as("Expected 200 or 201 on delete").isIn(200, 201);
     }
 
     @And("retrieving the booking by ID should return 404")
     public void retrievingBookingShouldReturn404() {
-        assertEquals(404, client().statusOf(ctx.lastBookingId),
-                "GET on deleted booking should return 404");
+        assertThat(client().statusOf(ctx.lastBookingId)).as("GET on deleted booking should return 404").isEqualTo(404);
     }
 
     @When("I create a booking with check-in {string} and check-out {string}")
@@ -121,11 +117,11 @@ public class BookingSteps {
 
     @Then("the booking check-in date should be {string}")
     public void theBookingCheckInShouldBe(String date) {
-        assertEquals(date, lastFetched.getBookingdates().getCheckin());
+        assertThat(lastFetched.getBookingdates().getCheckin()).isEqualTo(date);
     }
 
     @Then("the booking check-out date should be {string}")
     public void theBookingCheckOutShouldBe(String date) {
-        assertEquals(date, lastFetched.getBookingdates().getCheckout());
+        assertThat(lastFetched.getBookingdates().getCheckout()).isEqualTo(date);
     }
 }

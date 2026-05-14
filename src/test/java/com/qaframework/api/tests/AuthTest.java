@@ -9,8 +9,7 @@ import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Epic("restful-booker")
 @Feature("Authentication")
@@ -22,7 +21,7 @@ public class AuthTest extends BaseApiTest {
     @DisplayName("Valid credentials return a non-empty auth token")
     void validCredentialsReturnToken() {
         String token = new BookingClient(api).authenticate();
-        assertNotNull(token, "token should not be null");
-        assertTrue(token.length() > 10, "token should look like a real token, got: " + token);
+        assertThat(token).as("token should not be null").isNotNull();
+        assertThat(token).as("token should look like a real token").hasSizeGreaterThan(10);
     }
 }

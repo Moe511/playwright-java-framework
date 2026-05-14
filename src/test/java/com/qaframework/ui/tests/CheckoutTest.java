@@ -14,7 +14,7 @@ import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Epic("Saucedemo")
 @Feature("Checkout")
@@ -38,8 +38,9 @@ public class CheckoutTest extends BaseTest {
                 .clickContinue()
                 .finish();
 
-        assertTrue(checkout.isOrderComplete(),
-                "Order should complete with 'Thank you' confirmation");
+        assertThat(checkout.isOrderComplete())
+                .as("Order should complete with 'Thank you' confirmation")
+                .isTrue();
     }
 
     @Test
@@ -56,7 +57,6 @@ public class CheckoutTest extends BaseTest {
                 .fillInfo("Mohamed", "Ahmed", "")
                 .clickContinue();
 
-        assertTrue(checkout.errorMessage().toLowerCase().contains("postal code"),
-                "Expected postal-code error, got: " + checkout.errorMessage());
+        assertThat(checkout.errorMessage()).as("Expected postal-code error").containsIgnoringCase("postal code");
     }
 }
