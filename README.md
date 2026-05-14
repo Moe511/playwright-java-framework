@@ -1,40 +1,58 @@
 # Playwright Java Test Framework
 
-![Tests](https://github.com/Moe511/playwright-java-framework/actions/workflows/test.yml/badge.svg)
+[![Tests](https://github.com/Moe511/playwright-java-framework/actions/workflows/test.yml/badge.svg)](https://github.com/Moe511/playwright-java-framework/actions/workflows/test.yml)
+[![Allure Report](https://img.shields.io/badge/Allure-Report-brightgreen)](https://moe511.github.io/playwright-java-framework/)
 
-A UI + API test automation framework using **Playwright for Java**, **JUnit 5**, and **Allure**.
+A production-ready UI + API + BDD test automation framework using **Playwright for Java**, **Cucumber/Gherkin**, **JUnit 5**, and **Allure**. Testers write `.feature` files — no Java required for new scenarios.
 
 It tests two public demo apps:
 
-- **UI:** [saucedemo.com](https://www.saucedemo.com) — login, cart, checkout flows.
+- **UI:** [saucedemo.com](https://www.saucedemo.com) — login, cart, checkout, inventory, session flows.
 - **API:** [restful-booker.herokuapp.com](https://restful-booker.herokuapp.com) — auth + full booking CRUD.
 
 ## Features
 
-- Page Object Model for UI tests.
-- Domain client + Jackson models for API tests (Playwright `APIRequestContext`, no third-party HTTP lib needed).
-- Parallel execution at method and class level (JUnit 5 dynamic config).
-- Allure reporting with `@Step` annotations, screenshots on failure, and Playwright traces (open in [trace.playwright.dev](https://trace.playwright.dev)).
-- Thread-isolated browser contexts so parallel runs don't share cookies or storage.
-- Maven profiles to run UI-only or API-only suites.
+- **Two test layers** — 12 JUnit tests for fast regression + 28 Cucumber BDD scenarios for business-readable coverage (40 total).
+- **BDD / Gherkin** — full step vocabulary across UI and API; testers add `.feature` files without touching Java.
+- **Page Object Model** with fluent method chaining for UI tests.
+- **Domain client + Jackson models** for API tests (Playwright `APIRequestContext`, no third-party HTTP lib).
+- **Parallel execution** — JUnit 5 dynamic config + Cucumber parallel engine; each test gets an isolated browser context.
+- **AssertJ** fluent assertions with descriptive failure messages across all layers.
+- **`@Retry` annotation** — annotate any method or class to retry flaky tests up to N times before failing.
+- **Allure reporting** — `@Step` annotations on every page and API action, screenshots on failure, Playwright traces.
+- **Live Allure report** auto-published to GitHub Pages after every CI run: [moe511.github.io/playwright-java-framework](https://moe511.github.io/playwright-java-framework/)
+- **`run.ps1` / `run.sh`** wrapper scripts with tag/feature filtering and interactive Allure report generation.
 
 ## Project layout
 
 ```
 src/test/
 ├── java/com/qaframework/
-│   ├── core/                  BaseTest, BrowserManager, ConfigReader
+│   ├── core/                  BaseTest, BrowserManager, ConfigReader, Retry, RetryExtension
 │   ├── ui/
-│   │   ├── pages/             Page Objects (Login, Inventory, Cart, Checkout)
+│   │   ├── pages/             BasePage, LoginPage, InventoryPage, CartPage, CheckoutPage
 │   │   └── tests/             LoginTest, CartTest, CheckoutTest
-│   └── api/
-│       ├── clients/           ApiClient, BookingClient
-│       ├── models/            Booking, BookingDates, CreatedBooking
-│       └── tests/             AuthTest, BookingCrudTest, BaseApiTest
+│   ├── api/
+│   │   ├── clients/           ApiClient, BookingClient
+│   │   ├── models/            Booking, BookingDates, CreatedBooking
+│   │   └── tests/             BaseApiTest, AuthTest, BookingCrudTest
+│   └── bdd/
+│       ├── CucumberRunner.java
+│       ├── context/           UIContext, APIContext  (PicoContainer shared state per scenario)
+│       ├── hooks/             UIHooks (@ui), APIHooks (@api)
+│       └── steps/
+│           ├── CommonSteps    (URL, title, element visibility, navigate)
+│           ├── ui/            LoginSteps, CartSteps, CheckoutSteps, InventorySteps
+│           └── api/           AuthSteps, BookingSteps
 └── resources/
     ├── config.properties
+    ├── cucumber.properties
     ├── junit-platform.properties
-    └── allure.properties
+    ├── allure.properties
+    └── features/
+        ├── ui/                login.feature, cart.feature, checkout.feature,
+        │                      inventory.feature, session.feature
+        └── api/               auth.feature, booking.feature
 ```
 
 ## Prerequisites
@@ -48,77 +66,75 @@ src/test/
 Install Playwright's browser binaries (one-time, ~150 MB):
 
 ```bash
-mvn compile
 mvn exec:java -Dexec.mainClass="com.microsoft.playwright.CLI" -Dexec.args="install"
 ```
 
-Alternatively, the first test run will prompt with the command to run.
-
 ## Running tests
 
+### Wrapper scripts (recommended)
+
+```powershell
+# Windows
+.\run.ps1                                        # all 40 tests (JUnit + BDD)
+.\run.ps1 -Suite ui                              # JUnit UI tests only
+.\run.ps1 -Suite api                             # JUnit API tests only
+.\run.ps1 -Suite bdd                             # all BDD scenarios
+.\run.ps1 -Tag smoke                             # BDD scenarios tagged @smoke
+.\run.ps1 -Tag blocker                           # BDD scenarios tagged @blocker
+.\run.ps1 -Feature login                         # login.feature only
+.\run.ps1 -Feature booking -Tag critical         # combined filter
+.\run.ps1 -Suite ui -Headed -Browser firefox     # headed Firefox UI tests
+```
+
 ```bash
-# Everything (UI + API, in parallel)
-mvn test
+# Mac / Linux / Git Bash
+./run.sh                                         # all 40 tests
+./run.sh ui                                      # JUnit UI tests only
+./run.sh bdd                                     # all BDD scenarios
+./run.sh --tag smoke                             # BDD @smoke scenarios
+./run.sh --feature login                         # login.feature only
+./run.sh --headed --browser firefox              # headed Firefox
+```
 
-# UI only
-mvn test -Pui
+After tests complete the script asks whether to generate and open the Allure HTML report.
 
-# API only
-mvn test -Papi
+### Maven directly
 
-# Headed mode (watch the browser)
+```bash
+mvn test                    # JUnit suite (parallel)
+mvn test -Pui               # JUnit UI only
+mvn test -Papi              # JUnit API only
+mvn test -Pbdd              # Cucumber BDD suite (parallel)
+
+# Headed mode or different browser
 mvn test -Dheadless=false
-
-# Different browser
-mvn test -Dbrowser=firefox       # or webkit
+mvn test -Dbrowser=firefox
 
 # Override base URLs
 mvn test -Dui.baseUrl=https://www.saucedemo.com -Dapi.baseUrl=https://restful-booker.herokuapp.com
 ```
 
-## Viewing the Allure report
+## Adding a BDD scenario (no Java needed)
 
-After a test run:
+Open or create a `.feature` file under `src/test/resources/features/`:
 
-```bash
-mvn allure:serve
+```gherkin
+@ui @smoke
+Feature: Checkout
+
+  Scenario: Guest can complete a purchase
+    Given I am logged in as a standard user
+    And I add "Sauce Labs Backpack" to the cart
+    And I open the cart
+    When I have proceeded to checkout
+    And I fill in checkout details with first name "Jane", last name "Doe", postal code "10001"
+    And I continue and finish the order
+    Then I should see the order confirmation
 ```
 
-This launches a local web server and opens the report in your browser. Failed tests include:
+All step definitions are already wired. Run with `.\run.ps1 -Feature checkout` or `.\run.ps1 -Tag smoke`.
 
-- Screenshot at the moment of failure
-- Playwright trace zip (`target/traces/*.zip`) — drag into [trace.playwright.dev](https://trace.playwright.dev) to step through every action and network call
-- Video recording (`target/videos/`)
-
-## Configuration
-
-`src/test/resources/config.properties` controls defaults. Any value can be overridden via `-Dkey=value` on the Maven command line.
-
-| Key | Default | Notes |
-|-----|---------|-------|
-| `ui.baseUrl` | `https://www.saucedemo.com` | UI test target |
-| `api.baseUrl` | `https://restful-booker.herokuapp.com` | API test target |
-| `browser` | `chromium` | `chromium`, `firefox`, or `webkit` |
-| `headless` | `true` | Set to `false` to see the browser |
-| `slowMo` | `0` | Milliseconds delay between actions (debugging) |
-| `defaultTimeout` | `15000` | Locator/action timeout in ms |
-| `navigationTimeout` | `30000` | Page navigation timeout in ms |
-
-## Parallelism
-
-JUnit 5 parallel mode is **enabled by default**, configured in `junit-platform.properties`:
-
-- `parallel.mode.default = concurrent` — methods in the same class run in parallel.
-- `parallel.mode.classes.default = concurrent` — different classes also run in parallel.
-- `config.strategy = dynamic` (`factor = 1.0`) — one test thread per CPU core.
-
-Each test gets its own Playwright/Browser/Context/Page (UI) or `APIRequestContext` (API), so no shared state.
-
-## Adding a new UI test
-
-1. Create or extend a page object under `src/test/java/com/qaframework/ui/pages/`.
-2. Add a test class under `ui/tests/` that extends `BaseTest`.
-3. Use `page()` from `BaseTest` to access the Playwright `Page`.
+## Adding a JUnit test
 
 ```java
 @Test
@@ -128,26 +144,62 @@ void example() {
 }
 ```
 
-## Adding a new API test
+Extend `BaseTest` for UI or `BaseApiTest` for API. Screenshots and traces are captured automatically on failure.
 
-1. Add a method to `BookingClient` (or create a new client) for the endpoint.
-2. Add a test class under `api/tests/` that extends `BaseApiTest`.
-3. Use the injected `api` field to issue requests through `BookingClient`.
+## Retrying flaky tests
+
+```java
+@Test
+@Retry                        // 3 attempts by default
+void networkSensitiveTest() { ... }
+
+@Test
+@Retry(maxAttempts = 2)
+void lessFlaky() { ... }
+```
+
+Place `@Retry` on a class to apply to all its tests.
+
+## Allure report
+
+**Locally** — after any test run:
+
+```bash
+mvn allure:serve
+```
+
+**CI** — every push automatically publishes to GitHub Pages:
+[moe511.github.io/playwright-java-framework](https://moe511.github.io/playwright-java-framework/)
+
+Failed tests include a screenshot, Playwright trace zip (drag into [trace.playwright.dev](https://trace.playwright.dev)), and a step-by-step action log.
+
+## Configuration
+
+`src/test/resources/config.properties` — override any value with `-Dkey=value`.
+
+| Key | Default | Notes |
+|-----|---------|-------|
+| `ui.baseUrl` | `https://www.saucedemo.com` | UI test target |
+| `api.baseUrl` | `https://restful-booker.herokuapp.com` | API test target |
+| `browser` | `chromium` | `chromium`, `firefox`, or `webkit` |
+| `headless` | `true` | Set to `false` to watch the browser |
+| `slowMo` | `0` | ms delay between actions (debugging) |
+| `defaultTimeout` | `15000` | Locator/action timeout in ms |
+| `navigationTimeout` | `30000` | Page navigation timeout in ms |
 
 ## CI
 
-GitHub Actions workflow lives at `.github/workflows/test.yml`. Every push or PR to `main`/`master` triggers a full test run on `ubuntu-latest`. The workflow:
+GitHub Actions (`.github/workflows/test.yml`) runs on every push and PR to `main`:
 
-- Sets up JDK 17 (Temurin) and caches Maven dependencies
-- Caches Playwright browser binaries between runs
-- Installs Playwright with `--with-deps` (pulls Linux system libs)
-- Runs `mvn test` (parallel execution preserved)
-- Uploads four artifacts: `allure-results`, `surefire-reports`, plus `playwright-traces` and `playwright-videos` on failure
-- Publishes a second job that builds the Allure HTML report and uploads it as `allure-report` — download and open `index.html` locally
+1. JUnit suite (`mvn test`) — parallel execution
+2. BDD suite (`mvn test -Pbdd`) — runs even if JUnit fails
+3. Allure HTML report generated and deployed to GitHub Pages with trend history
 
+Artifacts retained for 14 days: `allure-results`, `surefire-reports`, `playwright-traces` (on failure).
 
 ## Roadmap
 
-- Docker runner.
-- AI-assisted test scaffolding (turn a user story into a Playwright test stub via the Claude API).
-- Cross-browser matrix (chromium/firefox/webkit) via workflow strategy.
+- [ ] Environment profiles — switch between dev/staging/prod with a single flag
+- [ ] Allure categories — classify failures as product bugs vs test bugs vs flakiness
+- [ ] Cross-browser matrix — chromium/firefox/webkit in parallel via workflow strategy
+- [ ] Docker runner

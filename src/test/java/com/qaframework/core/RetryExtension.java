@@ -23,6 +23,8 @@ public class RetryExtension implements InvocationInterceptor {
                 } else {
                     System.out.printf("[Retry] %s — attempt %d of %d%n",
                             extensionContext.getDisplayName(), attempt, maxAttempts);
+                    // NOTE: reflection re-invoke skips @BeforeEach/@AfterEach between retries.
+                    // Tests must be self-contained (navigate fresh on each call) for retries to be clean.
                     invocationContext.getExecutable().invoke(
                             extensionContext.getRequiredTestInstance(),
                             invocationContext.getArguments().toArray());
